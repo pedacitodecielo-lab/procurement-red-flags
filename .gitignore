@@ -9,3 +9,5 @@ Belajar_Proyek_*.md
 # Raw HTML cache is large and rebuilt by scrape_spse.py
 raw/html/
 data/backfill_*.out
+procurement.duckdb
+procurement.duckdb.wal
