@@ -151,7 +151,18 @@ def cache_path(portal, tender_id, name):
     return RAW / "html" / portal / f"{tender_id}_{name}.html.gz"
 
 
-def scrape_portal(code, year, limit=None, lists_only=False):
+def known_tenders():
+    """Tender IDs already parsed with full details (committed in data/tenders.csv).
+    On a fresh machine such as a GitHub Actions runner the HTML cache is empty,
+    so this is what keeps the weekly refresh incremental."""
+    path = ROOT / "data" / "tenders.csv"
+    if not path.exists():
+        return set()
+    with path.open(encoding="utf-8") as f:
+        return {row["tender_id"] for row in csv.DictReader(f) if row.get("hps")}
+
+
+def scrape_portal(code, year, limit=None, lists_only=False, skip=frozenset()):
     portal = Portal(code)
     list_file = RAW / "lists" / f"{code}_{year}.json"
     if not portal.open():
@@ -165,11 +176,12 @@ def scrape_portal(code, year, limit=None, lists_only=False):
     list_file.write_text(json.dumps(rows, ensure_ascii=False), encoding="utf-8")
 
     completed = [r[0] for r in rows if r[3] == COMPLETED and is_provincial(r[2])]
-    print(f"{code}: {len(rows)} tenders in {year}, {len(completed)} completed provincial tenders")
+    new = [t for t in completed if t not in skip]
+    print(f"{code}: {len(rows)} tenders in {year}, {len(completed)} completed provincial tenders, {len(new)} not yet parsed")
     if lists_only:
         return
 
-    todo = completed[:limit] if limit else completed
+    todo = new[:limit] if limit else new
     fetched = 0
     for tender_id in todo:
         for name in PAGES:
@@ -187,17 +199,19 @@ def scrape_portal(code, year, limit=None, lists_only=False):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--year", type=int, required=True)
+    parser.add_argument("--year", type=int, nargs="+", required=True)
     parser.add_argument("--portal", choices=sorted(PORTALS), help="one portal only")
     parser.add_argument("--limit", type=int, help="max completed tenders per portal (for testing)")
     parser.add_argument("--lists-only", action="store_true")
     args = parser.parse_args()
 
-    for code in [args.portal] if args.portal else PORTALS:
-        try:
-            scrape_portal(code, args.year, args.limit, args.lists_only)
-        except StopPortal as exc:
-            print(f"stopped: {exc}")
+    skip = known_tenders()
+    for year in args.year:
+        for code in [args.portal] if args.portal else PORTALS:
+            try:
+                scrape_portal(code, year, args.limit, args.lists_only, skip)
+            except StopPortal as exc:
+                print(f"stopped: {exc}")
 
 
 if __name__ == "__main__":

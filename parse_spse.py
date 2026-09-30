@@ -60,12 +60,32 @@ def number(text):
     return float(text.strip().replace(".", "").replace(",", "."))
 
 
+def cached(portal, tender_id, page):
+    return RAW / "html" / portal / f"{tender_id}_{page}.html.gz"
+
+
 def load(portal, tender_id, page):
-    path = RAW / "html" / portal / f"{tender_id}_{page}.html.gz"
+    path = cached(portal, tender_id, page)
     if not path.exists():
         issues.append({"portal": portal, "tender_id": tender_id, "page": page, "issue": "missing"})
         return None
     return BeautifulSoup(gzip.decompress(path.read_bytes()), "lxml")
+
+
+def previous_output():
+    """Rows parsed in earlier runs. The HTML cache is not committed, so on a fresh
+    machine (GitHub Actions) tenders parsed before are carried over from here."""
+    tenders_path, bids_path = OUT / "tenders.csv", OUT / "bids.csv"
+    if not tenders_path.exists():
+        return {}, {}
+    old = pd.read_csv(tenders_path, dtype={"tender_id": str})
+    old = old[old["hps"].notna()]
+    old_rows = {r["tender_id"]: {k: v for k, v in r.items() if pd.notna(v)} for r in old.to_dict("records")}
+    old_bids = {}
+    if bids_path.exists():
+        for b in pd.read_csv(bids_path, dtype={"tender_id": str}).to_dict("records"):
+            old_bids.setdefault(b["tender_id"], []).append({k: v for k, v in b.items() if pd.notna(v)})
+    return old_rows, old_bids
 
 
 def key_values(table):
@@ -186,6 +206,7 @@ def parse_bids(participants, evaluation):
 
 def main():
     tenders, bids = [], []
+    old_rows, old_bids = previous_output()
     for list_file in sorted((RAW / "lists").glob("*.json")):
         portal, year = list_file.stem.rsplit("_", 1)
         for raw_row in json.loads(list_file.read_text(encoding="utf-8")):
@@ -194,9 +215,15 @@ def main():
                 continue
             row.update({"portal": portal, "province": PORTALS[portal], "year": int(year),
                         "contract_value": money(row.pop("contract_value_text"))})
+            tid = row["tender_id"]
+            page_names = ("announcement", "participants", "evaluation", "winner")
+            if row["status"] == "Tender Sudah Selesai" and tid in old_rows \
+                    and not any(cached(portal, tid, p).exists() for p in page_names):
+                tenders.append({**old_rows[tid], **row})
+                bids.extend(old_bids.get(tid, []))
+                continue
             if row["status"] == "Tender Sudah Selesai":
-                tid = row["tender_id"]
-                pages = {p: load(portal, tid, p) for p in ("announcement", "participants", "evaluation", "winner")}
+                pages = {p: load(portal, tid, p) for p in page_names}
                 try:
                     if pages["announcement"] is not None:
                         row.update(parse_announcement(pages["announcement"]))

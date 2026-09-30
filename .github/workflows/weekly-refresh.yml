@@ -1,0 +1,45 @@
+# Refresh the procurement red-flag model every week with newly completed tenders.
+name: weekly-refresh
+
+on:
+  schedule:
+    - cron: "0 1 * * 1"   # Monday 08:00 WIB
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      # Keep downloaded pages between runs. Tenders already in data/tenders.csv are
+      # skipped anyway, so a cold cache only costs the new tenders.
+      - uses: actions/cache@v4
+        with:
+          path: raw/html
+          key: spse-html-${{ github.run_id }}
+          restore-keys: spse-html-
+      - name: Scrape new tenders (current and previous year)
+        run: python scrape_spse.py --year $(date -u +%Y) $(( $(date -u +%Y) - 1 ))
+      - name: Parse pages into tables
+        run: python parse_spse.py
+      - name: Build the SQL model and red flags
+        run: python build_model.py
+      - name: Score anomalies
+        run: python anomaly_model.py
+      - name: Data-quality checks (stops the run on a critical failure)
+        run: python dq_checks.py
+      - name: Commit if anything changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add raw/lists data/tenders.csv data/bids.csv data/parse_issues.csv data/scrape_log.csv model/
+          git diff --cached --quiet || git commit -m "Weekly refresh $(date -u +%F)"
+          git push
