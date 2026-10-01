@@ -1,4 +1,6 @@
 # Refresh the procurement red-flag model every week with newly completed tenders.
+# The report covers fiscal year 2025; tenders from that year keep completing for months,
+# so the weekly run picks them up. Change REPORT_YEAR to move the report to a new year.
 name: weekly-refresh
 
 on:
@@ -8,6 +10,9 @@ on:
 
 permissions:
   contents: write
+
+env:
+  REPORT_YEAR: "2025"
 
 jobs:
   refresh:
@@ -26,8 +31,8 @@ jobs:
           path: raw/html
           key: spse-html-${{ github.run_id }}
           restore-keys: spse-html-
-      - name: Scrape new tenders (current and previous year)
-        run: python scrape_spse.py --year $(date -u +%Y) $(( $(date -u +%Y) - 1 ))
+      - name: Scrape newly completed tenders
+        run: python scrape_spse.py --year "$REPORT_YEAR"
       - name: Parse pages into tables
         run: python parse_spse.py
       - name: Build the SQL model and red flags
@@ -36,6 +41,8 @@ jobs:
         run: python anomaly_model.py
       - name: Data-quality checks (stops the run on a critical failure)
         run: python dq_checks.py
+      - name: Export the Power BI tables
+        run: python export_powerbi.py
       - name: Commit if anything changed
         run: |
           git config user.name "github-actions[bot]"
