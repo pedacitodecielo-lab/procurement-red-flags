@@ -14,7 +14,7 @@ ROOT = Path(__file__).parent
 CHECKS = [
     ("duplicate tender IDs",
      "SELECT count(*) - count(DISTINCT tender_id) FROM tender_risk", True),
-    ("completed tenders without an owner's estimate (pages not yet scraped)",
+    ("completed tenders without an owner's estimate (winner page empty or not yet scraped, see parse_issues.csv)",
      "SELECT count(*) FROM tender_risk WHERE completed AND hps IS NULL", False),
     ("completed tenders with details but no winner star in the bids",
      """SELECT count(*) FROM tender_risk t WHERE completed AND hps IS NOT NULL

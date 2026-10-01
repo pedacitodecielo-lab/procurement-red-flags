@@ -90,7 +90,8 @@ def previous_output():
 
 def key_values(table):
     """Rows of the form <th>label</th><td>value</td>, at the top level of a table."""
-    rows = table.find_all("tr", recursive=False) or table.find("tbody").find_all("tr", recursive=False)
+    body = table.find("tbody")
+    rows = table.find_all("tr", recursive=False) or (body.find_all("tr", recursive=False) if body else [])
     out = {}
     for tr in rows:
         th = tr.find("th", recursive=False)
@@ -211,6 +212,10 @@ def main():
         portal, year = list_file.stem.rsplit("_", 1)
         for raw_row in json.loads(list_file.read_text(encoding="utf-8")):
             row = {name: raw_row[i] for i, name in LIST_COLUMNS.items()}
+            # Some names carry a status badge, e.g. <span class='badge'>Tender Ulang</span>.
+            badge = re.search(r"<span[^>]*>(.*?)</span>", row["tender_name"])
+            row["list_badge"] = badge.group(1).strip() if badge else None
+            row["tender_name"] = re.sub(r"<span[^>]*>.*?</span>|<[^>]+>", "", row["tender_name"]).strip()
             if not is_provincial(row["agency"]):
                 continue
             row.update({"portal": portal, "province": PORTALS[portal], "year": int(year),
@@ -229,8 +234,19 @@ def main():
                         row.update(parse_announcement(pages["announcement"]))
                     if pages["winner"] is not None:
                         row.update(parse_winner(pages["winner"]))
+                        if row.get("hps") is None:
+                            # SPSE shows an empty winner table for a few completed tenders.
+                            issues.append({"portal": portal, "tender_id": tid, "page": "winner",
+                                           "issue": "winner page is empty on SPSE (no pagu, HPS or winner)"})
                     if pages["participants"] is not None:
-                        for b in parse_bids(pages["participants"], pages["evaluation"]):
+                        tender_bids = parse_bids(pages["participants"], pages["evaluation"])
+                        # A few evaluation pages star two bidders (the first winner withdrew).
+                        # The winner page is the final word, so keep only that bidder's star.
+                        if sum(bool(b.get("is_winner")) for b in tender_bids) > 1 and row.get("winner_name"):
+                            final = row["winner_name"].strip().lower()
+                            for b in tender_bids:
+                                b["is_winner"] = bool(b.get("is_winner")) and b["bidder_name"].strip().lower() == final
+                        for b in tender_bids:
                             bids.append({"portal": portal, "tender_id": tid, **b})
                 except Exception as exc:  # keep going, but record the failure
                     issues.append({"portal": portal, "tender_id": tid, "page": "parse", "issue": repr(exc)[:200]})
