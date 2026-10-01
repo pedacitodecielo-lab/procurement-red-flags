@@ -12,3 +12,5 @@ data/backfill_*.out
 procurement.duckdb
 procurement.duckdb.wal
 data/backfill_*.err
+data/backfill_*
+*_backup*.pbix
