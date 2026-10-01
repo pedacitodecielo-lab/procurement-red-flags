@@ -1,0 +1,9 @@
+check,problem_rows,critical,status
+duplicate tender IDs,0,True,ok
+"completed tenders without an owner's estimate (winner page empty or not yet scraped, see parse_issues.csv)",20,False,review
+completed tenders with details but no winner star in the bids,26,False,review
+tenders with more than one winner star,0,True,ok
+non-positive owner's estimate or budget ceiling,0,True,ok
+owner's estimate above the budget ceiling,2,False,review
+winning bid above the owner's estimate,0,False,ok
+negative bids,0,True,ok
