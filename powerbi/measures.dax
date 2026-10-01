@@ -1,0 +1,95 @@
+// DAX measures in procurement_red_flags.pbix, exported from the model.
+// Tables: tenders (pbi_tenders.csv), flags (pbi_flags.csv), priority (pbi_priority.csv),
+// repeat_winners (repeat_winners.csv). Relationships: flags[tender_id] -> tenders, priority[tender_id] -> tenders.
+// "Analysed" = completed tenders whose detail pages were scraped (tenders[has_details] = TRUE).
+
+// home table: tenders   // format: 0
+[Completed Tenders] =
+    COUNTROWS ( tenders )
+
+// home table: tenders   // format: 0
+[Tenders Analysed] =
+    CALCULATE ( COUNTROWS ( tenders ), tenders[has_details] = TRUE () )
+
+// home table: flags
+[Tenders Analysed Label] =
+    FORMAT([Tenders Analysed], "#,0")
+
+// home table: tenders   // format: 0%;-0%;0%
+[Single Bid %] =
+    DIVIDE(CALCULATE(COUNTROWS(tenders), tenders[has_details] = TRUE(), tenders[flag_single_bid] = TRUE()) + 0, [Tenders Analysed])
+
+// home table: tenders   // format: 0%;-0%;0%
+[Near HPS %] =
+    DIVIDE(CALCULATE(COUNTROWS(tenders), tenders[has_details] = TRUE(), tenders[flag_near_hps] = TRUE()) + 0, [Tenders Analysed])
+
+// home table: tenders   // format: 0%;-0%;0%
+[HPS Copies Pagu %] =
+    DIVIDE ( CALCULATE ( COUNTROWS ( tenders ), tenders[has_details] = TRUE (), tenders[flag_hps_equals_pagu] = TRUE () ), [Tenders Analysed] )
+
+// home table: tenders   // format: 0
+[Multi Flag Tenders] =
+    CALCULATE ( COUNTROWS ( tenders ), tenders[has_details] = TRUE (), tenders[risk_score] >= 2 )
+
+// home table: tenders   // format: 0%;-0%;0%
+[Multi Flag %] =
+    DIVIDE([Multi Flag Tenders] + 0, [Tenders Analysed])
+
+// home table: tenders
+[Contract Value Analysed] =
+    CALCULATE ( SUM ( tenders[contract_value] ), tenders[has_details] = TRUE () )
+
+// home table: tenders
+[Multi Flag Value] =
+    CALCULATE ( SUM ( tenders[contract_value] ), tenders[has_details] = TRUE (), tenders[risk_score] >= 2 )
+
+// home table: tenders   // format: 0%;-0%;0%
+[Multi Flag Value %] =
+    DIVIDE ( [Multi Flag Value], [Contract Value Analysed] )
+
+// home table: tenders
+[Rp Label Multi Flag Value] =
+    VAR v = [Multi Flag Value]
+    RETURN IF ( v >= 1e12, "Rp " & FORMAT ( v / 1e12, "#,0.0" ) & " T", "Rp " & FORMAT ( v / 1e9, "#,0.0" ) & " bn" )
+
+// home table: tenders
+[Coverage Note] =
+    "Full bid details for " & FORMAT ( [Tenders Analysed], "#,0" ) & " of " & FORMAT ( [Completed Tenders], "#,0" ) & " completed tenders"
+
+// home table: tenders
+[Headline] =
+    "Of " & FORMAT ( [Tenders Analysed], "#,0" ) & " completed tenders, " & FORMAT ( [Single Bid %], "0%" )
+        & " had only one bidder and " & FORMAT ( [Multi Flag %], "0%" ) & " carry 2 or more red flags, worth "
+        & [Rp Label Multi Flag Value] & " (" & FORMAT ( [Multi Flag Value %], "0%" ) & " of contract value)."
+
+// home table: tenders   // format: 0%;-0%;0%
+[Flag Rate] =
+    DIVIDE ( CALCULATE ( COUNTROWS ( flags ), flags[flagged] = TRUE () ), COUNTROWS ( flags ) )
+
+// home table: flags   // format: 0%;-0%;0%
+[Scored Flag Rate] =
+    CALCULATE([Flag Rate], flags[scored] = TRUE())
+
+// home table: tenders   // format: 0
+[Tenders Flagged] =
+    CALCULATE ( COUNTROWS ( flags ), flags[flagged] = TRUE () )
+
+// home table: flags
+[Tier Color] =
+    SWITCH(SELECTEDVALUE(tenders[risk_tier]), "0 flags: clear", "#5B8FA8", "1 flag: watch", "#8C97AD", "2 flags: review", "#E8A33D", "3+ flags: priority", "#E0564B", "#8C97AD")
+
+// home table: flags   // format: "Rp "#,0.0" bn"
+[Top10 Flagged Value] =
+    VAR r = RANKX(ALLSELECTED(tenders[work_unit], tenders[province]), [Multi Flag Value], , DESC) RETURN IF(NOT ISBLANK([Multi Flag Value]) && r <= 10, [Multi Flag Value] / 1e9)
+
+// home table: flags   // format: "Rp "#,0.0" bn"
+[Repeat Win Value] =
+    DIVIDE(SUM(repeat_winners[contract_value]), 1e9)
+
+// home table: flags   // format: "Rp "#,0.00" bn"
+[Priority Value] =
+    DIVIDE(SUM(priority[contract_value]), 1e9)
+
+// home table: flags   // format: 0
+[Shortlist Count] =
+    COUNTROWS(priority) + 0

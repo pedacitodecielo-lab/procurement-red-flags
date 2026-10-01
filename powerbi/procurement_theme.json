@@ -1,0 +1,67 @@
+{
+  "name": "Procurement Red Flags - Navy Gold",
+  "dataColors": ["#D4AF37", "#E0564B", "#E8A33D", "#5B8FA8", "#8C97AD", "#B98E2E", "#3E5C8A", "#C9CED8"],
+  "background": "#111E36",
+  "foreground": "#F4F1EA",
+  "tableAccent": "#D4AF37",
+  "good": "#5B8FA8",
+  "neutral": "#E8A33D",
+  "bad": "#E0564B",
+  "maximum": "#E0564B",
+  "center": "#E8A33D",
+  "minimum": "#111E36",
+  "textClasses": {
+    "callout": { "fontFace": "Segoe UI Semibold", "fontSize": 28, "color": "#F4F1EA" },
+    "title": { "fontFace": "Segoe UI Semibold", "fontSize": 12, "color": "#F4F1EA" },
+    "header": { "fontFace": "Segoe UI Semibold", "fontSize": 11, "color": "#D4AF37" },
+    "label": { "fontFace": "Segoe UI", "fontSize": 10, "color": "#C9CED8" }
+  },
+  "visualStyles": {
+    "page": {
+      "*": {
+        "background": [{ "transparency": 0, "color": { "solid": { "color": "#0B1426" } } }],
+        "outspace": [{ "color": { "solid": { "color": "#070D1A" } } }]
+      }
+    },
+    "*": {
+      "*": {
+        "background": [{ "show": false }],
+        "border": [{ "show": false }],
+        "dropShadow": [{ "show": false }],
+        "title": [{ "show": false }],
+        "visualHeader": [{ "show": false }],
+        "categoryAxis": [{ "labelColor": { "solid": { "color": "#C9CED8" } }, "gridlineShow": false, "showAxisTitle": false }],
+        "valueAxis": [{ "labelColor": { "solid": { "color": "#8C97AD" } }, "gridlineColor": { "solid": { "color": "#22314F" } }, "showAxisTitle": false }],
+        "labels": [{ "color": { "solid": { "color": "#F4F1EA" } } }],
+        "legend": [{ "labelColor": { "solid": { "color": "#C9CED8" } } }]
+      }
+    },
+    "tableEx": {
+      "*": {
+        "grid": [{ "gridVertical": false, "gridHorizontal": true, "gridHorizontalColor": { "solid": { "color": "#22314F" } }, "rowPadding": 4 }],
+        "columnHeaders": [{ "fontColor": { "solid": { "color": "#D4AF37" } }, "backColor": { "solid": { "color": "#111E36" } }, "fontFamily": "Segoe UI Semibold" }],
+        "values": [{ "fontColorPrimary": { "solid": { "color": "#F4F1EA" } }, "backColorPrimary": { "solid": { "color": "#111E36" } }, "fontColorSecondary": { "solid": { "color": "#F4F1EA" } }, "backColorSecondary": { "solid": { "color": "#15233F" } } }],
+        "total": [{ "fontColor": { "solid": { "color": "#D4AF37" } }, "backColor": { "solid": { "color": "#111E36" } } }]
+      }
+    },
+    "pivotTable": {
+      "*": {
+        "columnHeaders": [{ "fontColor": { "solid": { "color": "#D4AF37" } }, "backColor": { "solid": { "color": "#111E36" } } }],
+        "rowHeaders": [{ "fontColor": { "solid": { "color": "#F4F1EA" } }, "backColor": { "solid": { "color": "#111E36" } } }],
+        "values": [{ "fontColorPrimary": { "solid": { "color": "#F4F1EA" } }, "backColorPrimary": { "solid": { "color": "#111E36" } }, "backColorSecondary": { "solid": { "color": "#15233F" } } }]
+      }
+    },
+    "slicer": {
+      "*": {
+        "items": [{ "fontColor": { "solid": { "color": "#F4F1EA" } }, "background": { "solid": { "color": "#111E36" } } }],
+        "header": [{ "fontColor": { "solid": { "color": "#D4AF37" } } }]
+      }
+    },
+    "cardVisual": {
+      "*": {
+        "background": [{ "show": false }],
+        "border": [{ "show": false }]
+      }
+    }
+  }
+}
