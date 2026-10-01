@@ -99,7 +99,7 @@ def build(con):
 
     -- 6. Repeat winner: vendor wins 3+ tenders from the same work unit in the year.
     CREATE OR REPLACE TABLE repeat_winners AS
-    SELECT portal, work_unit, winner_name, count(*) AS wins, sum(contract_value) AS contract_value
+    SELECT portal, province, work_unit, winner_name, count(*) AS wins, sum(contract_value) AS contract_value
     FROM tender_flags
     WHERE completed AND winner_name IS NOT NULL
     GROUP BY ALL
@@ -126,8 +126,9 @@ def build(con):
     SELECT *,
            coalesce(flag_single_bid::INT, 0) + coalesce(flag_near_hps::INT, 0)
          + coalesce(flag_lowest_not_winner::INT, 0) + coalesce(flag_tight_bid_spread::INT, 0)
-         + coalesce(flag_hps_equals_pagu::INT, 0) + flag_repeat_winner::INT
-         + flag_possible_split::INT AS n_flags
+         + flag_repeat_winner::INT + flag_possible_split::INT AS n_flags
+         -- flag_hps_equals_pagu is left out: it fires on most tenders, so it is
+         -- reported as a system-wide finding instead of a per-tender risk.
     FROM tender_risk;
 
     CREATE OR REPLACE TABLE province_summary AS
