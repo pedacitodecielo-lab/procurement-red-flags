@@ -79,14 +79,26 @@ def robust_z(frame):
     return (frame - median) / scale
 
 
+# Plain-language wording for the audit shortlist: (sentence, value format).
+PLAIN = {
+    "n_bids": ("Few bids", "{:.0f}"),
+    "bid_rate": ("Few registered firms actually bid", "{:.0%}"),
+    "winner_to_hps": ("Winning bid close to the owner's estimate", "{:.1%} of estimate"),
+    "bid_cv": ("Bids unusually close together", "{:.2%} spread"),
+    "winner_gap_to_lowest": ("Winner priced above the cheapest bid", "+{:.1%}"),
+    "disqualified_share": ("Many bidders disqualified", "{:.0%}"),
+    "vendor_unit_wins": ("Same firm keeps winning in this work unit", "{:.0f} wins"),
+}
+
+
 def explain(risk_row, raw_row, medians):
     parts = []
     for feat in risk_row.sort_values(ascending=False).index[:3]:
         if not risk_row[feat] > 0:
             continue
-        label, sign = FEATURES[feat]
-        direction = "high" if sign > 0 else "low"
-        parts.append(f"{label} {direction} ({raw_row[feat]:.3g} vs typical {medians[feat]:.3g})")
+        sentence, fmt = PLAIN[feat]
+        typical = fmt.split(" ")[0].format(medians[feat])  # unit is said once
+        parts.append(f"{sentence} ({fmt.format(raw_row[feat])} vs typical {typical})")
     return "; ".join(parts)
 
 
