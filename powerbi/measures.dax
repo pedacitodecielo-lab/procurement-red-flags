@@ -2,6 +2,7 @@
 // Tables: tenders (pbi_tenders.csv), flags (pbi_flags.csv), priority (pbi_priority.csv),
 // repeat_winners (repeat_winners.csv). Relationships: flags[tender_id] -> tenders, priority[tender_id] -> tenders.
 // "Analysed" = completed tenders whose detail pages were scraped (tenders[has_details] = TRUE).
+// Tier Color and Province Bar Color return hex codes used by conditional formatting (Field value).
 
 // home table: tenders   // format: 0
 [Completed Tenders] =
@@ -76,7 +77,11 @@
 
 // home table: flags
 [Tier Color] =
-    SWITCH(SELECTEDVALUE(tenders[risk_tier]), "0 flags: clear", "#5B8FA8", "1 flag: watch", "#8C97AD", "2 flags: review", "#E8A33D", "3+ flags: priority", "#E0564B", "#8C97AD")
+    SWITCH(SELECTEDVALUE(tenders[risk_tier]), "0 flags: clear", "#C9BFAE", "1 flag: watch", "#3B3F4A", "2 flags: review", "#9C8F7A", "3+ flags: priority", "#8E2A33", "#B9B1A3")
+
+// home table: flags
+[Province Bar Color] =
+    IF(RANKX(ALLSELECTED(tenders[province]), [Multi Flag %], , DESC) <= 2, "#8E2A33", "#3B3F4A")
 
 // home table: flags   // format: "Rp "#,0.0" bn"
 [Top10 Flagged Value] =

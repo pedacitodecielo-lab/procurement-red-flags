@@ -13,15 +13,15 @@ DATA, MODEL = ROOT / "data", ROOT / "model"
 F = "C:/Windows/Fonts/"
 S = 2  # render scale
 
-BG, PANEL, BORDER = "#0B1426", "#0F1B31", "#22314F"
-GOLD, IVORY, MUTED, GREEN, AMBER = "#D4AF37", "#F4F1EA", "#8C97AD", "#7FB77E", "#E8A33D"
+BG, PANEL, BORDER = "#F4F0E8", "#EEE8DD", "#D9D2C5"  # editorial palette, same as the report
+GOLD, IVORY, MUTED, GREEN, AMBER = "#8E2A33", "#17181C", "#6E6A62", "#3F6B4F", "#9A6A1E"  # accent, ink, muted, ok, review
 
 
 def font(name, size):
     return ImageFont.truetype(F + name, int(size * S))
 
 
-TITLE, H2, SUB = font("seguisb.ttf", 26), font("seguisb.ttf", 15), font("segoeui.ttf", 11)
+TITLE, H2, SUB = font("georgia.ttf", 26), font("georgia.ttf", 15), font("segoeui.ttf", 11)
 MONO, MONO_B = font("consola.ttf", 11.5), font("consolab.ttf", 11.5)
 
 
@@ -103,7 +103,7 @@ def stage_texts():
         (f"model/pbi_flags.csv      {flag_rows:,} rows (tender x flag)", IVORY),
         (f"model/pbi_priority.csv   {len(prio)} rows (audit shortlist)", IVORY),
         ("", None),
-        ("Power BI: Python data source, 4 tables, 22 DAX measures", MUTED),
+        ("Power BI: Python data source, 4 tables, 23 DAX measures", MUTED),
         ("pages: Overview / Red flags / Where / Audit shortlist", MUTED),
         ("", None),
         ("GitHub Actions: weekly re-scrape -> model -> checks -> commit", GREEN),

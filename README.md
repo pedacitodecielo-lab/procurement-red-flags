@@ -8,7 +8,7 @@ Red flags are risk indicators for choosing what to review. They are not evidence
 
 ![Overview](images/01_overview.png)
 
-**Interactive demo** (cross-filtering, page navigation and slicers): [watch the 46-second video](images/05_dashboard_demo.mp4)
+**Interactive demo** (cross-filtering, page navigation and slicers): [watch the 72-second video](images/05_dashboard_demo.mp4)
 
 ![Dashboard demo](images/05_dashboard_demo.gif)
 
@@ -93,8 +93,9 @@ model/*.csv  ->  procurement_red_flags.pbix (Power BI, 4 pages)
 - **Audit shortlist:** the 209 tenders from the anomaly model, with the reason for each, filterable by province and procurement type.
 
 Build notes:
+- Design: an editorial layout with a warm paper background, serif headings, hairline rules instead of boxed panels, and one accent colour (oxblood) kept for the highest-risk items.
 - The page backgrounds are drawn in Python (`powerbi/make_backgrounds.py`), and transparent visuals sit on top, so every number stays live.
-- The theme is in `powerbi/procurement_theme.json`, and all 22 DAX measures are in `powerbi/measures.dax`.
+- The theme is in `powerbi/procurement_theme.json`, and all 23 DAX measures are in `powerbi/measures.dax`. Two of them return colours for conditional formatting.
 
 **`.github/workflows/weekly-refresh.yml`** re-runs the pipeline every Monday for fiscal year 2025, because tenders from that year keep completing for months. It commits only if the data-quality checks pass.
 
