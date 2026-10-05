@@ -1,21 +1,81 @@
 portal,tender_id,page,issue
-baliprov,10077659000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-baliprov,10067548000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-bantenprov,10013412000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-bantenprov,10021776000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-jakarta,57238127,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kalbarprov,10045462000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kalselprov,10029913000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kalselprov,10063637000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kalselprov,10043709000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kalselprov,10068538000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kaltaraprov,10040098000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kaltaraprov,10049951000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kalteng,10062252000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kalteng,10082747000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kalteng,10100376000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-kaltimprov,10035031000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-ntbprov,10085077000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-sulbarprov,10079039000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-sulselprov,10079437000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
-sulselprov,10082436000,winner,"winner page is empty on SPSE (no pagu, HPS or winner)"
+baliprov,10077659000,announcement,missing
+baliprov,10077659000,participants,missing
+baliprov,10077659000,evaluation,missing
+baliprov,10077659000,winner,missing
+baliprov,10067548000,announcement,missing
+baliprov,10067548000,participants,missing
+baliprov,10067548000,evaluation,missing
+baliprov,10067548000,winner,missing
+bantenprov,10013412000,announcement,missing
+bantenprov,10013412000,participants,missing
+bantenprov,10013412000,evaluation,missing
+bantenprov,10013412000,winner,missing
+bantenprov,10021776000,announcement,missing
+bantenprov,10021776000,participants,missing
+bantenprov,10021776000,evaluation,missing
+bantenprov,10021776000,winner,missing
+jakarta,57238127,announcement,missing
+jakarta,57238127,participants,missing
+jakarta,57238127,evaluation,missing
+jakarta,57238127,winner,missing
+kalbarprov,10045462000,announcement,missing
+kalbarprov,10045462000,participants,missing
+kalbarprov,10045462000,evaluation,missing
+kalbarprov,10045462000,winner,missing
+kalselprov,10029913000,announcement,missing
+kalselprov,10029913000,participants,missing
+kalselprov,10029913000,evaluation,missing
+kalselprov,10029913000,winner,missing
+kalselprov,10063637000,announcement,missing
+kalselprov,10063637000,participants,missing
+kalselprov,10063637000,evaluation,missing
+kalselprov,10063637000,winner,missing
+kalselprov,10043709000,announcement,missing
+kalselprov,10043709000,participants,missing
+kalselprov,10043709000,evaluation,missing
+kalselprov,10043709000,winner,missing
+kalselprov,10068538000,announcement,missing
+kalselprov,10068538000,participants,missing
+kalselprov,10068538000,evaluation,missing
+kalselprov,10068538000,winner,missing
+kaltaraprov,10040098000,announcement,missing
+kaltaraprov,10040098000,participants,missing
+kaltaraprov,10040098000,evaluation,missing
+kaltaraprov,10040098000,winner,missing
+kaltaraprov,10049951000,announcement,missing
+kaltaraprov,10049951000,participants,missing
+kaltaraprov,10049951000,evaluation,missing
+kaltaraprov,10049951000,winner,missing
+kalteng,10062252000,announcement,missing
+kalteng,10062252000,participants,missing
+kalteng,10062252000,evaluation,missing
+kalteng,10062252000,winner,missing
+kalteng,10082747000,announcement,missing
+kalteng,10082747000,participants,missing
+kalteng,10082747000,evaluation,missing
+kalteng,10082747000,winner,missing
+kalteng,10100376000,announcement,missing
+kalteng,10100376000,participants,missing
+kalteng,10100376000,evaluation,missing
+kalteng,10100376000,winner,missing
+kaltimprov,10035031000,announcement,missing
+kaltimprov,10035031000,participants,missing
+kaltimprov,10035031000,evaluation,missing
+kaltimprov,10035031000,winner,missing
+ntbprov,10085077000,announcement,missing
+ntbprov,10085077000,participants,missing
+ntbprov,10085077000,evaluation,missing
+ntbprov,10085077000,winner,missing
+sulbarprov,10079039000,announcement,missing
+sulbarprov,10079039000,participants,missing
+sulbarprov,10079039000,evaluation,missing
+sulbarprov,10079039000,winner,missing
+sulselprov,10079437000,announcement,missing
+sulselprov,10079437000,participants,missing
+sulselprov,10079437000,evaluation,missing
+sulselprov,10079437000,winner,missing
+sulselprov,10082436000,announcement,missing
+sulselprov,10082436000,participants,missing
+sulselprov,10082436000,evaluation,missing
+sulselprov,10082436000,winner,missing
